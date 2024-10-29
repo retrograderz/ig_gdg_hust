@@ -163,12 +163,6 @@ class ProfilePage extends StatelessWidget {
             ),
           ],),
 
-          Row(
-            children: [
-              
-            ],
-          )
-
           Expanded(
             child: Center(
               child: Text('Profile Content Here'),
