@@ -1,140 +1,180 @@
-// Copyright 2019 the Dart project authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license
-// that can be found in the LICENSE file.
-
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-const int maxSeeds = 250;
+final Uri _url1 = Uri.parse('https://www.threads.net/@gdgoc_hust?hl=vi');
+
 
 void main() {
-  runApp(const Sunflower());
+  runApp(MyApp());
 }
 
-class Sunflower extends StatefulWidget {
-  const Sunflower({super.key});
-
-  @override
-  State<StatefulWidget> createState() {
-    return _SunflowerState();
-  }
-}
-
-class _SunflowerState extends State<Sunflower> {
-  int seeds = maxSeeds ~/ 2;
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'AppBar Demo',
       theme: ThemeData(
-        brightness: Brightness.dark,
-        appBarTheme: const AppBarTheme(elevation: 2),
+        primarySwatch: Colors.blue,
       ),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Sunflower'),
+      home: ProfilePage(),
+    );
+  }
+}
+
+class ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            // Go back logic here
+          },
         ),
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: SunflowerWidget(seeds),
-              ),
-              const SizedBox(height: 20),
-              Text('Showing ${seeds.round()} seeds'),
-              SizedBox(
-                width: 300,
-                child: Slider(
-                  min: 1,
-                  max: maxSeeds.toDouble(),
-                  value: seeds.toDouble(),
-                  onChanged: (val) {
-                    setState(() => seeds = val.round());
-                  },
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
+        title: Text(
+          'gdgoc_hust',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
           ),
         ),
+        centerTitle: false, // Centers the title
+        actions: [
+          IconButton(
+            icon: Icon(Icons.send, color: Colors.black),
+            onPressed: () {
+              // Send button action here
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.more_vert, color: Colors.black),
+            onPressed: () {
+              // Overflow menu action here
+            },
+          ),
+        ],
       ),
-    );
-  }
-}
+      
+      body: Column(
+        children: [
+          // Following Row
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                  CircleAvatar(
+                    radius: 60, // Profile picture size
+                    backgroundImage: NetworkImage('gdgoc_avt.jpg'), 
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'GDG-HUST',
+                    style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                
+                Column(
+                  children: [
+                    Text(
+                      '12',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'bài viết',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      '74',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'người theo dõi',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      '71',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'đang theo dõi',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Add additional widgets/content here
 
-class SunflowerWidget extends StatelessWidget {
-  static const tau = math.pi * 2;
-  static const scaleFactor = 1 / 40;
-  static const size = 600.0;
-  static final phi = (math.sqrt(5) + 1) / 2;
-  static final rng = math.Random();
+          Row(children: [
+            Padding(padding: const EdgeInsets.only(left: 35.0),
+            child: 
+              Column(children: [
+                InkWell(
+                  child: Text('@ gdgoc_hust',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black, // Text color
+                      fontWeight: FontWeight.bold, // Font weight
+                    ),
+                    textAlign: TextAlign.center,),
+                  onTap: () => launchUrl(_url1),
+                ),
+                Text('i have 2 sides',
+                style: TextStyle(
+                  fontSize: 18,
+                  )
+                ),
+                Text('Xem bản dịch',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  )
+                ),
+              ],
+            ),
+            ),
+          ],),
 
-  final int seeds;
+          Row(
+            children: [
+              
+            ],
+          )
 
-  const SunflowerWidget(this.seeds, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final seedWidgets = <Widget>[];
-
-    for (var i = 0; i < seeds; i++) {
-      final theta = i * tau / phi;
-      final r = math.sqrt(i) * scaleFactor;
-
-      seedWidgets.add(AnimatedAlign(
-        key: ValueKey(i),
-        duration: Duration(milliseconds: rng.nextInt(500) + 250),
-        curve: Curves.easeInOut,
-        alignment: Alignment(r * math.cos(theta), -1 * r * math.sin(theta)),
-        child: const Dot(true),
-      ));
-    }
-
-    for (var j = seeds; j < maxSeeds; j++) {
-      final x = math.cos(tau * j / (maxSeeds - 1)) * 0.9;
-      final y = math.sin(tau * j / (maxSeeds - 1)) * 0.9;
-
-      seedWidgets.add(AnimatedAlign(
-        key: ValueKey(j),
-        duration: Duration(milliseconds: rng.nextInt(500) + 250),
-        curve: Curves.easeInOut,
-        alignment: Alignment(x, y),
-        child: const Dot(false),
-      ));
-    }
-
-    return FittedBox(
-      fit: BoxFit.contain,
-      child: SizedBox(
-        height: size,
-        width: size,
-        child: Stack(children: seedWidgets),
-      ),
-    );
-  }
-}
-
-class Dot extends StatelessWidget {
-  static const size = 5.0;
-  static const radius = 3.0;
-
-  final bool lit;
-
-  const Dot(this.lit, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: lit ? Colors.orange : Colors.grey.shade700,
-        borderRadius: BorderRadius.circular(radius),
-      ),
-      child: const SizedBox(
-        height: size,
-        width: size,
+          Expanded(
+            child: Center(
+              child: Text('Profile Content Here'),
+            ),
+          ),
+        ],
       ),
     );
   }

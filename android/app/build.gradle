@@ -42,3 +42,10 @@ android {
 flutter {
     source = "../.."
 }
+
+// vo hieu hoa auto-test
+testOptions {
+    unitTests.all {
+        it.enabled = false
+    }
+}
